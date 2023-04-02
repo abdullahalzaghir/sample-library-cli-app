@@ -35,7 +35,14 @@ def borrow_book():
     # 
     # 
     
-
+@app.command("add_book")
+def add_book(username: str,password: str,name:str,pages:int,title:str,authorname:str):
+    # First, check if the user exists in the database
+    if signIn(username, password):
+        addbook(name, pages, title, authorname)
+        typer.echo(f"Book {name} added successfully for user {username}.")
+    else:
+        typer.echo("Invalid username or password")
 # Example function for tables, you can add more columns/row
 @app.command("display_table")
 def display_table():
@@ -51,4 +58,3 @@ def display_table():
 
 if __name__ == "__main__":
     app()
-

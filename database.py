@@ -149,29 +149,56 @@ def signIn(username: str, password: int):
     params = config('database.ini','CLI_Library')
     conn = psycopg2.connect(**params)
     conn.autocommit = True
-    cur = conn.cursor()
-    cur.execute('SELECT username FROM public."user";')
-    user = cur.fetchall()
-    
-    cur.execute('SELECT password FROM public."user";')
-    user_pass = cur.fetchall()
-    
-    for i,j in zip(user, user_pass):
-        if username == i[0] and password == j[0]:
-            typer.secho(f"You are signed in", fg=typer.colors.GREEN)
-            break
+   
+    select_query = "SELECT * FROM public.user WHERE username = %s AND password = %s"
+    record_to_select = (username, password)
+    cursor = conn.cursor()
+    cursor.execute(select_query, record_to_select)
+    user_exists = cursor.fetchone() is not None
+    if user_exists:
+        print("User Login Successfully")
+        return True
     else:
-        typer.secho(f"username or password is wrong!", fg=typer.colors.RED)
+        print("Invalid username or password")
+        return False
         
-            
+def addbook(name: str, pages: int, title:str, authorname:str):
+    params = config('database.ini','CLI_Library')
+    conn = psycopg2.connect(**params)
+    conn.autocommit = True
+    
+    insert_query = "INSERT INTO public.books (name,pages) VALUES (%s, %s) RETURNING id"
+    record_to_insert = (name, pages)
+    cursor = conn.cursor()
+    cursor.execute(insert_query, record_to_insert)
+    book_id = cursor.fetchone()[0]
+    
+    insert_query = "INSERT INTO public.genre (title) VALUES (%s) RETURNING genre_id"
+    record_to_insert = (title,)
+    cursor.execute(insert_query, record_to_insert)
+    genre_id = cursor.fetchone()[0]
+    
+    insert_query = "INSERT INTO public.author (author_name) VALUES (%s) RETURNING id"
+    record_to_insert = (authorname,)
+    cursor.execute(insert_query, record_to_insert)
+    author_id = cursor.fetchone()[0]
+    
+    insert_query = "INSERT INTO public.book_author (book_id, author_id) VALUES (%s, %s)"
+    record_to_insert = (book_id, author_id)
+    cursor.execute(insert_query, record_to_insert)
+    
+    insert_query = "INSERT INTO public.genre_book (book_id, genre_id) VALUES (%s, %s)"
+    record_to_insert = (book_id, genre_id)
+    cursor.execute(insert_query, record_to_insert)
+    
+    if cursor.rowcount == 1:
+        typer.echo(f"Book {name} added successfully for user.")
+    else:
+        typer.echo("Error adding the book.")
+    
+    cursor.close()
+    conn.close()
+
     
 if __name__ == '__main__':
     connect()
-
-
-
-
-if __name__ == '__main__':
-    connect()
-
-
