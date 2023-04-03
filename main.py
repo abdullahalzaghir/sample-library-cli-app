@@ -30,11 +30,6 @@ def sign_in(username: str, password: int):
 @app.command()
 def borrow_book():
     pass
-    # 
-    # 
-    # 
-    # 
-    
 @app.command("add_book")
 def add_book(username: str,password: str,name:str,pages:int,title:str,authorname:str):
     # First, check if the user exists in the database
