@@ -157,7 +157,7 @@ def signIn(username: str, password: int):
     else:
         print("Invalid username or password")
         return False
-        
+
 def addbook(name: str, pages: int, title:str, authorname:str):
     params = config('database.ini','CLI_Library')
     conn = psycopg2.connect(**params)
@@ -188,7 +188,7 @@ def addbook(name: str, pages: int, title:str, authorname:str):
     cursor.execute(insert_query, record_to_insert)
     
     if cursor.rowcount == 1:
-        typer.echo(f"Book {name} added successfully for user.")
+        typer.echo(f"Book {name} added successfully for users.")
     else:
         typer.echo("Error adding the book.")
     
