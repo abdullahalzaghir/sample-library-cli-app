@@ -25,7 +25,6 @@ def sign_up(username: str, password: int):
 def sign_in(username: str, password: int):
     typer.echo(f"Nice that you are signing in!")
     signIn(username, password) 
-    
 
 @app.command()
 def borrow_book():

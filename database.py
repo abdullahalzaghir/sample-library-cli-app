@@ -28,9 +28,7 @@ def connect():
                 typer.secho(f"Database created successfully", fg=typer.colors.GREEN)
                 
                 
-                
-                
-                
+        
             except psycopg2.Error as e:
                 # If the CREATE DATABASE statement fails or another error occurs, catch the exception and print an error message
                 typer.echo(f"The CREATE DATABASE statement failed: {e}")
@@ -56,8 +54,6 @@ def connect():
                         break
                 conn.close()
                 cur.close()
-            
-            
         else:
             conn.autocommit = True 
             curr = conn.cursor()
@@ -78,7 +74,7 @@ def connect():
                 sqlFile = file.read()
                 file.close()
                 sqlCommands = sqlFile.split(';')[:-1]
-                # Execute every command from the input file
+                # Execute every command from the input fil
                 for command in sqlCommands:
                     try:
                         curr.execute(command)
